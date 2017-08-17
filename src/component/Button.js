@@ -8,9 +8,9 @@
  * Button
  * 做一个按钮
  *
- * 小技巧：TouchableOpacity按住tab键自动展开！
+ * 小技巧：控件TouchableOpacity按住tab键自动展开！
+ * TouchableHighlight
  * 按钮自定义
- * CTRL+D 自动复制一行
  */
 
 import React, {Component} from 'react';
@@ -19,10 +19,11 @@ import {
     StyleSheet,
     Text,
     View,
+    TouchableOpacity,
+    TouchableHighlight,
 } from 'react-native';
-import Button from './src/component/Button'
 
-export default class ReactNative_View extends Component {
+export default class Button extends Component {
 
 
     constructor(props) {
@@ -32,15 +33,22 @@ export default class ReactNative_View extends Component {
 
     customPress = () => {
         // 按钮的自定义方法引用
-        alert('按钮被点击,当前状态是：' + this.state.status);
+        // alert('按钮被点击,当前状态是：' + this.state.status);
+        const {dianji} = this.props;
+        dianji();
     }
 
     render() {
+        // 解构 const不可更改的操作
+        //  写法：const text = this.props.text;
+        const {text, beijing} = this.props;
         return (
             <View style={styles.container}>
-                {/* props属性 同事可以添加别的标签*/}
-               <Button text = "添加" beijing ="red" date = "2017/8/17" object = {{a:'b'}} dianji ={() =>{alert('你点击了添加！')}}/>
-               <Button text = "删除" beijing = "gray" dianji ={() =>{alert('你点击了删除！')}}/>
+                <TouchableOpacity style={[styles.button,{backgroundColor: beijing}]}
+                onPress = {this.customPress}>
+                    <Text style={styles.buttonText}>{this.props.text}</Text>
+                </TouchableOpacity>
+
             </View>
         );
     }
@@ -76,7 +84,3 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
 });
-
-// 注册应用(registerComponent)后才能正确渲染
-// 注意：只把应用作为一个整体注册一次，而不是每个组件/模块都注册
-AppRegistry.registerComponent('ReactNative_View', () => ReactNative_View);
