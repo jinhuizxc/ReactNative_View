@@ -5,249 +5,94 @@
  */
 
 /**
- * ActivityIndicator
- * 显示一个圆形的loading提示符号。
+ * Button
+ * 做一个按钮
+ *
+ * 小技巧：TouchableOpacity按住tab键自动展开！
+ * 按钮自定义
  */
 
-// import React, { Component } from 'react';
-// import {
-//     AppRegistry,
-//     StyleSheet,
-//     Text,
-//     View,
-//     ActivityIndicator,
-//     TouchableOpacity
-// } from 'react-native';
-//
-// class RNActivityIndicatorDemo extends Component {
-//
-//     constructor(props) {
-//         super(props);
-//         this.state = {// 初始设为显示加载动画
-//             animating: true,
-//         };
-//     }
-//
-//     // 按钮响应方法，切换显示与隐藏
-//     showOrHide() {
-//         if (this.state.animating) {
-//             this.setState({
-//                 animating: false
-//             });
-//         } else {
-//             this.setState({
-//                 animating: true
-//             });
-//         }
-//     }
-//
-//     render() {
-//         return (
-//             <View style={styles.container}>
-//                 {/* 切换显示或隐藏的按钮 */}
-//                 <TouchableOpacity underlayColor="#fff" style={styles.btn} onPress={
-//                     this.showOrHide.bind(this)}>
-//                     <Text style={{color:'#fff', fontSize: 20}}>显示/隐藏</Text>
-//                 </TouchableOpacity>
-//                 {/* 小号的指示器 */}
-//                 <ActivityIndicator
-//                     animating={this.state.animating}
-//                     style={[styles.centering, {height: 80}]}
-//                     size="small" />
-//                 {/* 大号的指示器 */}
-//                 <ActivityIndicator
-//                     animating={this.state.animating}
-//                     style={[styles.centering, {height: 80}]}
-//                     size="large" />
-//             </View>
-//         );
-//     }
-// }
-//
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         backgroundColor: '#F5FCFF',
-//     },
-//     centering: {
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//         padding: 8,
-//     },
-//     btn:{
-//         marginTop:10,
-//         width:150,
-//         height:35,
-//         backgroundColor:'#3BC1FF',
-//         justifyContent:'center',
-//         alignItems:'center',
-//         borderRadius:4,
-//     },
-// });
-
-
-'use strict';
-
-const React = require('react');
-const ReactNative = require('react-native');
-const {
-    ActivityIndicator,
-    StyleSheet,
-    View,
+import React, {Component} from 'react';
+import {
     AppRegistry,
-} = ReactNative;
-const TimerMixin = require('react-timer-mixin');
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    TouchableHighlight,
+} from 'react-native';
 
-const ToggleAnimatingActivityIndicator = React.createClass({
-    mixins: [TimerMixin],
+export default class ReactNative_View extends Component {
 
-    getInitialState() {
-        return {
-            animating: true,
-        };
-    },
 
-    setToggleTimeout() {
-        this.setTimeout(() => {
-            this.setState({animating: !this.state.animating});
-            this.setToggleTimeout();
-        }, 2000);
-    },
+    constructor(props) {
+        super(props);
+        this.state = {status: 1};
+    }
 
-    componentDidMount() {
-        this.setToggleTimeout();
-    },
+    customPress = () => {
+        // 按钮的自定义方法引用
+        alert('按钮被点击,当前状态是：' + this.state.status);
+    }
 
     render() {
         return (
-            <ActivityIndicator
-                animating={this.state.animating}
-                style={[styles.centering, {height: 80}]}
-                size="large"
-            />
+            <View style={styles.container}>
+                <Text style={styles.welcome}>
+                    Welcome to React Native!
+                </Text>
+                <Text style={styles.instructions}>
+                    To get started, edit index.ios.js
+                </Text>
+                <Text style={styles.instructions}>
+                    Press Cmd+R to reload,{'\n'}
+                    Cmd+D or shake for dev menu
+                </Text>
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>确定</Text>
+                </TouchableOpacity>
+                <Text style={styles.instructions}>
+                   text
+                </Text>
+                <TouchableHighlight style={styles.button} onPress={this.customPress}>
+                    <Text style={styles.buttonText}>取消</Text>
+                </TouchableHighlight>
+            </View>
         );
     }
-});
-
-exports.displayName = (undefined: ?string);
-exports.framework = 'React';
-exports.title = '<ActivityIndicator>';
-exports.description = 'Animated loading indicators.';
-
-exports.examples = [
-    {
-        title: 'Default (small, white)',
-        render() {
-            return (
-                <ActivityIndicator
-                    style={[styles.centering, styles.gray]}
-                    color="white"
-                />
-            );
-        }
-    },
-    {
-        title: 'Gray',
-        render() {
-            return (
-                <View>
-                    <ActivityIndicator
-                        style={[styles.centering]}
-                    />
-                    <ActivityIndicator
-                        style={[styles.centering, {backgroundColor: '#eeeeee'}]}
-                    />
-                </View>
-            );
-        }
-    },
-    {
-        title: 'Custom colors',
-        render() {
-            return (
-                <View style={styles.horizontal}>
-                    <ActivityIndicator color="#0000ff"/>
-                    <ActivityIndicator color="#aa00aa"/>
-                    <ActivityIndicator color="#aa3300"/>
-                    <ActivityIndicator color="#00aa00"/>
-                </View>
-            );
-        }
-    },
-    {
-        title: 'Large',
-        render() {
-            return (
-                <ActivityIndicator
-                    style={[styles.centering, styles.gray]}
-                    color="white"
-                    size="large"
-                />
-            );
-        }
-    },
-    {
-        title: 'Large, custom colors',
-        render() {
-            return (
-                <View style={styles.horizontal}>
-                    <ActivityIndicator
-                        size="large"
-                        color="#0000ff"
-                    />
-                    <ActivityIndicator
-                        size="large"
-                        color="#aa00aa"
-                    />
-                    <ActivityIndicator
-                        size="large"
-                        color="#aa3300"
-                    />
-                    <ActivityIndicator
-                        size="large"
-                        color="#00aa00"
-                    />
-                </View>
-            );
-        }
-    },
-    {
-        title: 'Start/stop',
-        render() {
-            return <ToggleAnimatingActivityIndicator/>;
-        }
-    },
-    {
-        title: 'Custom size',
-        render() {
-            return (
-                <ActivityIndicator
-                    style={[styles.centering, {transform: [{scale: 1.5}]}]}
-                    size="large"
-                />
-            );
-        }
-    },
-];
+}
 
 const styles = StyleSheet.create({
-    centering: {
-        alignItems: 'center',
+    button: {
+        height: 40,
+        width: 100,
+        borderRadius: 20,
+        backgroundColor: 'green',
         justifyContent: 'center',
-        padding: 8,
+        overflow: 'hidden',
     },
-    gray: {
-        backgroundColor: '#cccccc',
+    buttonText: {
+        textAlign: 'center',
+        color: 'white'
     },
-    horizontal: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        padding: 8,
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
+    instructions: {
+        textAlign: 'center',
+        color: '#333333',
+        marginBottom: 5,
     },
 });
 
 // 注册应用(registerComponent)后才能正确渲染
 // 注意：只把应用作为一个整体注册一次，而不是每个组件/模块都注册
-AppRegistry.registerComponent('ReactNative_View', () => ToggleAnimatingActivityIndicator);
+AppRegistry.registerComponent('ReactNative_View', () => ReactNative_View);
