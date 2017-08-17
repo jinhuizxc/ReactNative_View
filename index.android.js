@@ -13,6 +13,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     View,
+    AccessibilityInfo,
 } from 'react-native';
 
 /**
@@ -26,61 +27,47 @@ import {
  所以如果你使用LayoutAnimation无法实现一个效果，那可能还是要考虑其他的方案。
  */
 
-const {UIManager} = NativeModules;
-
-UIManager.setLayoutAnimationEnabledExperimental &&
-UIManager.setLayoutAnimationEnabledExperimental(true);
-
-
-export default class App extends React.Component {
+class ScreenReaderStatusExample extends React.Component {
     state = {
-        w: 100,
-        h: 100,
-    };
+        screenReaderEnabled: false,
+    }
 
-    _onPress = () => {
-        // Animate the update
-        LayoutAnimation.spring();
-        this.setState({w: this.state.w + 15, h: this.state.h + 15})
+    componentDidMount() {
+        AccessibilityInfo.addEventListener(
+            'change',
+            this._handleScreenReaderToggled
+        );
+        AccessibilityInfo.fetch().done((isEnabled) => {
+            this.setState({
+                screenReaderEnabled: isEnabled
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        AccessibilityInfo.removeEventListener(
+            'change',
+            this._handleScreenReaderToggled
+        );
+    }
+
+    _handleScreenReaderToggled = (isEnabled) => {
+        this.setState({
+            screenReaderEnabled: isEnabled,
+        });
     }
 
     render() {
         return (
-            <View style={styles.container}>
-                <View style={[styles.box, {width: this.state.w, height: this.state.h}]}/>
-                <TouchableOpacity onPress={this._onPress}>
-                    <View style={styles.button}>
-                        <Text style={styles.buttonText}>Press me!</Text>
-                    </View>
-                </TouchableOpacity>
+            <View>
+                <Text>
+                    The screen reader is {this.state.screenReaderEnabled ? 'enabled' : 'disabled'}.
+                </Text>
             </View>
         );
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    box: {
-        width: 200,
-        height: 200,
-        backgroundColor: 'red',
-    },
-    button: {
-        backgroundColor: 'black',
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-        marginTop: 15,
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-    },
-});
-
 // 注册应用(registerComponent)后才能正确渲染
 // 注意：只把应用作为一个整体注册一次，而不是每个组件/模块都注册
-AppRegistry.registerComponent('ReactNative_View', () => App);
+AppRegistry.registerComponent('ReactNative_View', () => ScreenReaderStatusExample);
