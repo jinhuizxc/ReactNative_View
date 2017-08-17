@@ -20,46 +20,37 @@ import {
  * 2、弹性（Flex）宽高
  * 使用flex:1来指定某个组件扩张以撑满所有剩余的空间
  * 这些并列的子组件的flex值不一样，则谁的值更大，
- * 谁占据剩余空间的比例就更大（即占据剩余空间的比等于并列组件间flex值的比）。
+ * 谁占据剩余空间的比例就更大（即占据剩余空间的比等于并列组件间flex值的比）
+ * 3、 使用Flexbox布局
+ * React Native中的Flexbox的工作原理和web上的CSS基本一致，当然也存在少许差异。
+ * 首先是默认值不同：flexDirection的默认值是column而不是row，而flex也只能指定一个数字值。
+ * Flex Direction
+ * 在组件的style中指定flexDirection可以决定布局的主轴。
+ * 子元素是应该沿着水平轴(row)方向排列，
+ * 还是沿着竖直轴(column)方向排列呢？默认值是竖直轴(column)方向。
+ * Justify Content
+ * 在组件的style中指定justifyContent可以决定其子元素沿着主轴的排列方式。
+ * 子元素是应该靠近主轴的起始端还是末尾段分布呢？亦或应该均匀分布？
+ * 对应的这些可选项有：flex-start、center、flex-end、space-around以及space-between。
+ * Align Items
+ * 在组件的style中指定alignItems
+ * 可以决定其子元素沿着次轴（与主轴垂直的轴，比如若主轴方向为row，则次轴方向为column）的排列方式。
+ * 子元素是应该靠近次轴的起始端还是末尾段分布呢？亦或应该均匀分布？
+ * 对应的这些可选项有：flex-start、center、flex-end以及stretch。
  *
  */
 class LotsOfStyles extends Component {
     render() {
         return (
-
-            <View style={{flex: 1}}>
-                <Text style = {styles.red}>just red</Text>
-                <Text style={styles.bigblue}>just bigblue</Text>
-                <Text style={[styles.bigblue, styles.red]}>bigblue, then red</Text>
-                <Text style = {[styles.red, styles.bigblue]}>red, then bigblue</Text>
-
-                <View style={{flex: 2}}>
-                    <View style={{flex: 1, backgroundColor: 'powderblue'}}>
-                        <Text style = {styles.red}>just red</Text>
-                    </View>
-                    <View style={{flex: 2, backgroundColor: 'skyblue'}} />
-                    <View style={{flex: 3, backgroundColor: 'steelblue'}} />
-                </View>
-
+            // 尝试把`flexDirection`改为`column`看看
+            <View style={{flex: 1, flexDirection: 'row'}}>
+                <View style={{width: 50, height: 50, backgroundColor: 'powderblue'}} />
+                <View style={{width: 50, height: 50, backgroundColor: 'skyblue'}} />
+                <View style={{width: 50, height: 50, backgroundColor: 'steelblue'}} />
             </View>
-
         )
     }
 }
 
-
-// 定义样式
-// 常见的做法是按顺序声明和使用style属性，
-// 以借鉴CSS中的“层叠”做法（即后声明的属性会覆盖先声明的同名属性）。
-const styles = StyleSheet.create({
-    bigblue:{
-        color: 'blue',
-        fontWeight: 'bold',
-        fontSize: 30,
-    },
-    red:{
-        color:'red',
-    }
-})
 
 AppRegistry.registerComponent('ReactNative_View', () => LotsOfStyles);
