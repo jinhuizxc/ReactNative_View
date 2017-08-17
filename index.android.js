@@ -11,55 +11,42 @@ import {
     Text,
     View,
     Image,
+    TextInput,
 } from 'react-native';
 
 /**
- * 1、指定宽高
- * 最简单的给组件设定尺寸的方式就是在样式中指定固定的width和height。
- * React Native中的尺寸都是无单位的，表示的是与设备像素密度无关的逻辑像素点。
- * 2、弹性（Flex）宽高
- * 使用flex:1来指定某个组件扩张以撑满所有剩余的空间
- * 这些并列的子组件的flex值不一样，则谁的值更大，
- * 谁占据剩余空间的比例就更大（即占据剩余空间的比等于并列组件间flex值的比）
- * 3、 使用Flexbox布局
- * React Native中的Flexbox的工作原理和web上的CSS基本一致，当然也存在少许差异。
- * 首先是默认值不同：flexDirection的默认值是column而不是row，而flex也只能指定一个数字值。
- * Flex Direction
- * 在组件的style中指定flexDirection可以决定布局的主轴。
- * 子元素是应该沿着水平轴(row)方向排列，
- * 还是沿着竖直轴(column)方向排列呢？默认值是竖直轴(column)方向。
- * Justify Content
- * 在组件的style中指定justifyContent可以决定其子元素沿着主轴的排列方式。
- * 子元素是应该靠近主轴的起始端还是末尾段分布呢？亦或应该均匀分布？
- * 对应的这些可选项有：flex-start、center、flex-end、space-around以及space-between。
- * Align Items
- * 在组件的style中指定alignItems
- * 可以决定其子元素沿着次轴（与主轴垂直的轴，比如若主轴方向为row，则次轴方向为column）的排列方式。
- * 子元素是应该靠近次轴的起始端还是末尾段分布呢？亦或应该均匀分布？
- * 对应的这些可选项有：flex-start、center、flex-end以及stretch。
- * 注意：要使stretch选项生效的话，子元素在次轴方向上不能有固定的尺寸。以下面的代码为例：
- * 只有将子元素样式中的width: 50去掉之后，alignItems: 'stretch'才能生效。
- *
+ * 处理文本输入
+ * TextInput是一个允许用户输入文本的基础组件。它有一个名为onChangeText的属性，
+ * 此属性接受一个函数，
+ * 而此函数会在文本变化时被调用。另外还有一个名为onSubmitEditing的属性，
+ * 会在文本被提交后（用户按下软键盘上的提交键）调用。
+ * 假如我们要实现当用户输入时，实时将其以单词为单位翻译为另一种文字。
+ * 我们假设这另一种文字来自某个吃货星球，只有一个单词： 🍕。
+ * 所以"Hello there Bob"将会被翻译为"🍕🍕🍕"。
+ * 在上面的例子里，我们把text保存到state中，因为它会随着时间变化。
  */
 class LotsOfStyles extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {text: ''};
+    }
+
     render() {
         return (
-            // 尝试把`alignItems`改为`flex-start`看看
-            // 尝试把`justifyContent`改为`flex-end`看看
-            // 尝试把`flexDirection`改为`row`看看
-            <View style={{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <View style={{width: 50, height: 50, backgroundColor: 'powderblue'}} />
-                <View style={{width: 50, height: 50, backgroundColor: 'skyblue'}} />
-                <View style={{width: 50, height: 50, backgroundColor: 'steelblue'}} />
+            <View style={{padding: 10}}>
+                <TextInput
+                    style={{height: 40}}
+                    placeholder="Type here to translate!"
+                    onChangeText={(text) => this.setState({text})}/>
+                <Text style={{padding: 10, fontSize: 42}}>
+                    {this.state.text.split(' ').map((word) => word && '🍕').join(' ')}
+                </Text>
             </View>
         )
     }
 }
 
-
+// 注册应用(registerComponent)后才能正确渲染
+// 注意：只把应用作为一个整体注册一次，而不是每个组件/模块都注册
 AppRegistry.registerComponent('ReactNative_View', () => LotsOfStyles);
