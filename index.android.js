@@ -12,30 +12,27 @@
  * 按钮自定义
  * CTRL+D 自动复制一行
  *
- * 模拟网络请求：有2种方法：
- * 1、refs引用按钮方法
- *  <Button  ref = "button" text = "提交"  onPress = {this.fetchData}/>
- *   fetchData = () => {
-        // 禁用按钮
-        this.refs.button.disable();
-        // alert('正在获取数据');// 这里是dialog效果不好，采用定时器可以的！
-        this.timer = setTimeout(() =>{
-            // 获取完数据后启用按钮
-            this.refs.button.enable();
-        }, 3000);
+ * 网络请求拉取数据
+ * 补充：网络请求如果不行可以尝试
+ * body:key1=value1&key2=value2,然后去掉
+ *  headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+ 因为用的已经不是json格式了！
+ title为空的判断：
+ 1、{this.state.title ? this.state.title : null}
+ 2、加构造器初始化状态(推荐)：
+ constructor(props) {
+        super(props);
+        // 初始状态
+        this.state = {
+            title: '',
+        }
+    }
 
-    };
- *  2、引用button,用回调方法
- *   this.disable();
- *   onPress(this.enable);  // 异步执行
- *   fetchData = (enableCallBack) => {
-        console.log(3);
-        // alert('正在获取数据');// 这里是dialog效果不好，采用定时器可以的！
-        this.timer = setTimeout(() =>{
-            enableCallBack();
-        }, 3000);
 
-    };
+ *
  */
 
 import React, {Component} from 'react';
@@ -50,31 +47,49 @@ import Button from './src/component/Button'
 export default class ReactNative_View extends Component {
 
 
+    constructor(props) {
+        super(props);
+        // 初始状态
+        this.state = {
+            title: '',
+        }
+    }
+
 // 回调方法enableCallBack
     fetchData = (enableCallBack) => {
-        console.log(3);
-        // alert('正在获取数据');// 这里是dialog效果不好，采用定时器可以的！
-        this.timer = setTimeout(() =>{
-            enableCallBack();
-        }, 3000);
+        fetch('http://bbs.reactnative.cn/api/category/3', {
+           //method: 'POST',  // get:用户读取数据 post:用户可以进行修改上传！方法默认是get
+           //  headers: {
+           //      'Accept': 'application/json',
+           //      'Content-Type': 'application/json',
+           //  },
+           //  body: JSON.stringify({
+           //      firstParam: 'yourValue',
+           //      secondParam: 'yourOtherValue',
+           //  })
+        }).then((response) => response.json())
+            // .then((responseJson) => {
+            //     return responseJson.movies;
+            .then((jsondata) => {
+            this.setState({
+                title: jsondata.topics[0].title,
+            })
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
 
     };
-    componentWillUnmount() {
-        // 请注意Un"m"ount的m是小写
-
-        // 如果存在this.timer，则使用clearTimeout清空。
-        // 如果你使用多个timer，那么用多个变量，或者用个数组来保存引用，然后逐个clear
-        this.timer && clearTimeout(this.timer);
-    }
 
     render() {
         return (
             <View style={styles.container}>
                 <Text style={styles.welcome}>
-                    Welcome to React Native!
+                   RN中文网头条文章：
                 </Text>
                 <Text style={styles.instructions}>
-                    To get started, edit index.ios.js
+                    {this.state.title ? this.state.title : null}
                 </Text>
                 <Text style={styles.instructions}>
                     Press Cmd+R to reload,{'\n'}
