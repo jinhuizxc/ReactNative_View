@@ -55,6 +55,7 @@ export default class ReactNative_View extends Component {
         }
     }
 
+
 // 回调方法enableCallBack
     fetchData = (enableCallBack) => {
         fetch('http://bbs.reactnative.cn/api/category/3', {
@@ -73,7 +74,8 @@ export default class ReactNative_View extends Component {
             .then((jsondata) => {
             this.setState({
                 title: jsondata.topics[0].title,
-            })
+            });
+                enableCallBack();
             })
             .catch((error) => {
                 console.error(error);

@@ -22,6 +22,7 @@ import {
     View,
     TouchableOpacity,
     TouchableHighlight,
+    ActivityIndicator,
 } from 'react-native';
 
 export default class Button extends Component {
@@ -31,12 +32,27 @@ export default class Button extends Component {
         super(props);
         this.state = {
             disabled: false,
+            animating: true, // 初始设为显示加载动画
+        }
+    }
+
+    // 按钮响应方法，切换显示与隐藏
+    showOrHide() {
+        if (this.state.animating) {
+            this.setState({
+                animating: false
+            });
+        } else {
+            this.setState({
+                animating: true
+            });
         }
     }
 
     onPress = () => {
         const {onPress} = this.props;
         this.disable();
+        this.showOrHide();
         onPress(this.enable);  // 异步执行
         // this.enable();
     };
@@ -57,13 +73,18 @@ export default class Button extends Component {
         //  this.state.disabled && styles.disabled ---当前者样式成立返回后面的样式
         const {text} = this.props;
         return (
+            <View>
                 <TouchableOpacity
                     disabled = {this.state.disabled}
                     style={[styles.button, this.state.disabled && styles.disabled]}
                     onPress={this.onPress}>
                     <Text style={styles.buttonText}>{text}</Text>
                 </TouchableOpacity>
-
+                <ActivityIndicator
+                    animating={this.state.animating}
+                    style={[styles.centering, {height: 80}]}
+                    size="large" />
+            </View>
         );
     }
 }
