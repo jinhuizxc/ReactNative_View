@@ -11,6 +11,7 @@
  * 小技巧：控件TouchableOpacity按住tab键自动展开！
  * TouchableHighlight
  * 按钮自定义
+ *
  */
 
 import React, {Component} from 'react';
@@ -28,33 +29,47 @@ export default class Button extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {status: 1};
+        this.state = {
+            disabled: false,
+        }
     }
 
-    customPress = () => {
-        // 按钮的自定义方法引用
-        // alert('按钮被点击,当前状态是：' + this.state.status);
-        const {dianji} = this.props;
-        dianji();
-    }
+    onPress = () => {
+        const {onPress} = this.props;
+        onPress();
+    };
+    enable = () =>{
+        this.setState({
+            disabled: false,
+        })
+    };
+    disable = () =>{
+        this.setState({
+            disabled: true,
+        })
+    };
 
     render() {
         // 解构 const不可更改的操作
         //  写法：const text = this.props.text;
-        const {text, beijing} = this.props;
+        //  this.state.disabled && styles.disabled ---当前者样式成立返回后面的样式
+        const {text} = this.props;
         return (
-            <View style={styles.container}>
-                <TouchableOpacity style={[styles.button,{backgroundColor: beijing}]}
-                onPress = {this.customPress}>
-                    <Text style={styles.buttonText}>{this.props.text}</Text>
+                <TouchableOpacity
+                    disabled = {this.state.disabled}
+                    style={[styles.button, this.state.disabled && styles.disabled]}
+                    onPress={this.onPress}>
+                    <Text style={styles.buttonText}>{text}</Text>
                 </TouchableOpacity>
 
-            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    disabled:{
+        backgroundColor: 'gray',
+    },
     button: {
         height: 40,
         width: 100,
@@ -67,20 +82,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'white',
     },
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
+
 });
