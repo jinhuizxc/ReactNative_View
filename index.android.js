@@ -25,7 +25,17 @@
         }, 3000);
 
     };
- *  2、
+ *  2、引用button,用回调方法
+ *   this.disable();
+ *   onPress(this.enable);  // 异步执行
+ *   fetchData = (enableCallBack) => {
+        console.log(3);
+        // alert('正在获取数据');// 这里是dialog效果不好，采用定时器可以的！
+        this.timer = setTimeout(() =>{
+            enableCallBack();
+        }, 3000);
+
+    };
  */
 
 import React, {Component} from 'react';
@@ -40,14 +50,12 @@ import Button from './src/component/Button'
 export default class ReactNative_View extends Component {
 
 
-
-    fetchData = () => {
-        // 禁用按钮
-        this.refs.button.disable();
+// 回调方法enableCallBack
+    fetchData = (enableCallBack) => {
+        console.log(3);
         // alert('正在获取数据');// 这里是dialog效果不好，采用定时器可以的！
         this.timer = setTimeout(() =>{
-            // 获取完数据后启用按钮
-            this.refs.button.enable();
+            enableCallBack();
         }, 3000);
 
     };
@@ -73,7 +81,7 @@ export default class ReactNative_View extends Component {
                     Cmd+D or shake for dev menu
                 </Text>
                 {/* props属性  ref相当于html里面的id 标记引用组件等 同时可以添加别的标签   dianji = {this.fetchData()}*/}
-               <Button  ref = "button" text = "提交"  onPress = {this.fetchData}/>
+               <Button   text = "提交"  onPress = {this.fetchData}/>
             </View>
         );
     }

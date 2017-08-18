@@ -35,15 +35,20 @@ export default class Button extends Component {
     }
 
     onPress = () => {
+        console.log(1);
         const {onPress} = this.props;
-        onPress();
+        this.disable();
+        onPress(this.enable);  // 异步执行
+        // this.enable();
     };
     enable = () =>{
+        console.log(4);
         this.setState({
             disabled: false,
         })
     };
     disable = () =>{
+        console.log(2);
         this.setState({
             disabled: true,
         })
