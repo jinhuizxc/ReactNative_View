@@ -13,38 +13,45 @@ import {
     Image
 } from 'react-native';
 
-export default class ReactNative_View extends Component {
-    render() {
+/**
+ * 增加一个带边框的矩形，红色边框
+ */
+
+var ReactNative_View = React.createClass({
+    render: function() {
         return (
-            <View style={styles.container}>
-                <Text style={styles.welcome}>
-                   Hello image!
-                </Text>
-                <Image style={styles.pic} source={{uri: 'https://avatars3.githubusercontent.com/u/6133685?v=3&s=460'}}>
-                </Image>
-                <Image style={styles.pic} source={require('./res/image/QQ_btn_highlighted.png')}/>
-            </View>
+                <View style={styles.style_0}>
+                    <View style={styles.style_1}>
+                        <Text style={{marginTop:40, fontSize:25}}>1／4高</Text>
+                        <Text style={{marginTop:40, fontSize:25}}>1／4高</Text>
+                    </View>
+                    <View style={[styles.style_1,{flexDirection: 'column'}]}>
+                        <Text style={{marginTop:40, fontSize:25}}>1／4高</Text>
+                        <Text style={{marginTop:40, fontSize:25}}>1／4高</Text>
+                    </View>
+                    <View style={{flex:10, height:40, borderWidth: 1, borderColor: 'red',}}>
+                        <Text style={{marginTop:40, fontSize:25}}>1／2高</Text>
+                    </View>
+                </View>
         );
     }
-}
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    pic: {
-        width:100,
-        height:100,
-    }
 });
+
+var styles = StyleSheet.create({
+    style_0:{
+        flex:1,
+    },
+    style_1:{
+        flexDirection: 'row',
+        flex: 5,
+        height:40,
+        borderWidth: 1,
+        borderColor: 'red',
+    },
+
+});
+
+
 
 // 注册应用(registerComponent)后才能正确渲染
 // 注意：只把应用作为一个整体注册一次，而不是每个组件/模块都注册
