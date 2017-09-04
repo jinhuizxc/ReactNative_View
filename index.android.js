@@ -7,165 +7,193 @@
  *
  */
 
-import React, {Component} from 'react';
+/**
+ * 1，AsyncStorage介绍
+ * AsyncStorage 是一个简单的、异步的、持久化的 Key-Value 存储系统，它对于 App 来说是全局性的。它用来代替 LocalStorage。
+ * 由于它的操作是全局的，官方建议我们最好针对 AsyncStorage 进行一下抽象的封装再使用，而且不是直接拿 AsyncStorage 进行使用。
+ * AsyncStorage 存储的位置根据系统的不同而有所差异。iOS 中的存储类似于 NSUserDefault，通过 plist 文件存放在设备中。Android 中会存储在 RocksDB 或者 SQLite 中，取决于你使用哪个。
+ *原文出自：www.hangge.com  转载请保留原文链接：http://www.hangge.com/blog/cache/detail_1567.html
+ *
+ * 2，相关方法
+ * 1）根据键来获取值，获取的结果会放在回调函数中。
+ * static getItem(key: string, callback:(error, result))
+ * 2）根据键来设置值。
+ * static setItem(key: string, value: string, callback:(error))
+ * 3）根据键来移除项。
+ * static removeItem(key: string, callback:(error))
+ * 4）合并现有值和输入值。
+ * static mergeItem(key: string, value: string, callback:(error))
+ * 5）清除所有的项目
+ * static clear(callback:(error))
+ * 6）获取所有的键
+ * static getAllKeys(callback:(error, keys))
+ * 7）清除所有进行中的查询操作。
+ * static flushGetRequests()
+ * 8）获取多项，其中 keys 是字符串数组，比如：['k1', 'k2']
+ * static multiGet(keys, callback:(errors, result))
+ * 9）设置多项，其中 keyValuePairs 是字符串的二维数组，比如：[['k1', 'val1'], ['k2', 'val2']]
+ * static multiSet(keyValuePairs, callback:(errors))
+ * 10）删除多项，其中 keys 是字符串数组，比如：['k1', 'k2']
+ * static multiRemove(keys, callback:(errors))
+ * 11）多个键值合并，其中 keyValuePairs 是字符串的二维数组，比如：[['k1', 'val1'], ['k2', 'val2']]
+ * static multiMerge(keyValuePairs, callback:(errors))
+ */
+import React, { Component } from 'react';
 import {
     AppRegistry,
     StyleSheet,
     Text,
     View,
-    Image
+    TextInput,
+    AsyncStorage
 } from 'react-native';
 
-/**
- *
- * React-Native布局实战1
- *
- */
+//用户信息填写组件
+class UserInfo extends Component {
+    //构造函数
+    constructor(props) {
+        super(props);
+        this.state = {name: '', phone: ''};
+    }
 
-export default class ReactNative_View extends Component {
+    //页面的组件渲染完毕（render）之后执行
+    componentDidMount(){
+        var _that = this;
 
+        //需要查询的键值
+        var keys = ["name","phone"];
+        //根据键数组查询保存的键值对
+        AsyncStorage.multiGet(keys, function(errs, result){
+            //如果发生错误，这里直接返回（return）防止进入下面的逻辑
+            if(errs){
+                return;
+            }
+
+            //得到的结果是二维数组（result[i][0]表示我们存储的键，result[i][1]表示我们存储的值）
+            _that.setState({
+                name: (result[0][1]!=null)?result[0][1]:'',
+                phone: (result[1][1]!=null)?result[1][1]:''
+            });
+        });
+    }
+
+    //组件渲染
     render() {
         return (
-            <View style={{}}>
-                <View style={[styles.height160, styles.row,]}>
-                    <View style={[styles.height160, styles.part_1_left,]}>
-                        <Text style={[styles.font14, styles.marTop18, styles.marLeft10, styles.green]}>我们约吧</Text>
-                        <Text style={[styles.font10, styles.marTop14, styles.marLeft10]}>恋爱家人好朋友</Text>
-                        <Image style={[styles.yue]} source={{uri: 'http://p0.meituan.net/mmc/fe4d2e89827aa829e12e2557ded363a112289.png'}}></Image>
+            <View style={styles.flex}>
+                <View style={styles.row}>
+                    <View style={styles.head}>
+                        <Text style={styles.label}>姓名</Text>
                     </View>
-                    <View style={[styles.height160, styles.part_1_right,]}>
-                        <View style={[styles.row, {flex:1}]}>
-                            <View style={{flex:1}}>
-                                <Text style={[styles.font14, {marginLeft:30}, styles.red]}>超低价值</Text>
-                                <Text style={[styles.font14, {fontSize:12, marginTop:14, marginLeft:30,color: 'black'}]}>十元惠生活</Text>
-                            </View>
-                            <View style={[{flex:1}, {marginTop:-13}]}>
-                                <Image style={[styles.hanbao]} source={{uri: 'http://p0.meituan.net/mmc/a06d0c5c0a972e784345b2d648b034ec9710.jpg'}}></Image>
-                            </View>
-                        </View>
-                        <View style={[{flex:1, flexDirection: 'row',borderTopWidth:0.5, borderColor:'#DDD8CE'}]}>
-                            <View style={{flex:1, borderRightWidth:1, borderColor:'#DDD8CE',}}>
-                                <Text style={{color:'#F742AB', marginLeft:5,fontWeight:'bold', fontSize:15, marginTop:8}}>聚餐宴请</Text>
-                                <Text style={{fontSize:12,marginTop:4, marginLeft:5}}>朋友家人常聚聚</Text>
-                                <Image style={{height:25,width:25, alignSelf: 'center'}} source={{uri: 'http://p1.meituan.net/mmc/08615b8ae15d03c44cc5eb9bda381cb212714.png'}}></Image>
-                            </View>
-                            <View style={{flex:1,}}>
-                                <Text style={[styles.font14,{color:'#FF8601', marginTop:8, marginLeft:5}]}>名店抢购</Text>
-                                <Text style={[{marginLeft:5, fontSize:12,marginTop:4,}]}>还有</Text>
-                                <Text style={[{marginLeft:5, fontSize:12,marginTop:4,}]}>12:06:12分</Text>
-                            </View>
-                        </View>
+                    <View style={styles.flex}>
+                        <TextInput style={styles.input}
+                                   value={this.state.name}
+                                   onChangeText={(name) => this.setState({name})}/>
                     </View>
                 </View>
-                <View>
-                    <View style={{borderBottomWidth:1,borderTopWidth:1, borderColor:'#DDD8CE', marginTop:40,height:65, flexDirection: 'row',paddingTop:10}}>
-                        <View style={[{flex:1}]}>
-                            <Text style={{fontSize:17, color:'#FF7F60', fontWeight:'900', marginLeft:7}}>一元吃大餐</Text>
-                            <Text style={{marginLeft:7, fontSize:12, marginTop:3}}>新用户专享</Text>
-                        </View>
-                        <View style={{flex:1}}>
-                            <Image style={{height:50, width:120}} source={{uri:'http://p1.meituan.net/280.0/groupop/7f8208b653aa51d2175848168c28aa0b23269.jpg'}}></Image>
-                        </View>
+                <View style={styles.row}>
+                    <View style={styles.head}>
+                        <Text style={styles.label}>电话</Text>
+                    </View>
+                    <View style={styles.flex}>
+                        <TextInput style={styles.input}
+                                   value={this.state.phone}
+                                   onChangeText={(phone) => this.setState({phone})}/>
                     </View>
                 </View>
-                <View>
-                    <View style={{flexDirection: 'row',}}>
-                        <View style={[styles.row, {borderColor:'#DDD8CE', borderRightWidth:1}]}>
-                            <View style={{flex:1,}}>
-                                <Text style={{fontSize:17, color:'#EA6644', fontWeight:'bold', marginLeft:7}}>撸串节狂欢</Text>
-                                <Text style={{fontSize:12, color:'#97979A', marginTop:3, marginLeft:7}}>烧烤6.6元起</Text>
-                            </View>
-                            <View style={{flex:1}}>
-                                <Image style={{width:60,height:55}} source={{uri: 'http://p1.meituan.net/280.0/groupop/fd8484743cbeb9c751a00e07573c3df319183.png'}}></Image>
-                            </View>
-                        </View>
-                        <View style={styles.row}>
-                            <View style={{flex:1}}>
-                                <Text style={{fontSize:17, color:'#EA6644', fontWeight:'bold', marginLeft:7}}>毕业旅行</Text>
-                                <Text style={{fontSize:12, color:'#97979A', marginTop:3, marginLeft:7}}>选好酒店才安心</Text>
-                            </View>
-                            <View style={{flex:1}}>
-                                <Image style={{width:60,height:55}} source={{uri: 'http://p0.meituan.net/280.0/groupop/ba4422451254f23e117dedb4c6c865fc10596.jpg'}}></Image>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{flexDirection: 'row',}}>
-                        <View style={[styles.row, {borderColor:'#DDD8CE', borderRightWidth:1,  marginLeft:1},]}>
-                            <View style={{flex:1}}>
-                                <Text style={{fontSize:17, color:'#EA6644', fontWeight:'bold', marginLeft:7}}>0元餐来袭</Text>
-                                <Text style={{fontSize:12, color:'#97979A', marginTop:3, marginLeft:7}}>免费吃喝玩乐购</Text>
-                            </View>
-                            <View style={{flex:1}}>
-                                <Image style={{width:60,height:55}} source={{uri: 'http://p0.meituan.net/280.0/groupop/6bf3e31d75559df76d50b2d18630a7c726908.png'}}></Image>
-                            </View>
-                        </View>
-                        <View style={styles.row}>
-                            <View style={{flex:1}}>
-                                <Text style={{fontSize:17, color:'#EA6644', fontWeight:'bold', marginLeft:7}}>热门团购</Text>
-                                <Text style={{fontSize:12, color:'#97979A', marginTop:3, marginLeft:7}}>大家都在买什么</Text>
-                            </View>
-                            <View style={{flex:1}}>
-                                <Image style={{width:60,height:55}} source={{uri: 'http://p1.meituan.net/mmc/a616a48152a895ddb34ca45bd97bbc9d13050.png'}}></Image>
-                            </View>
-                        </View>
-                    </View>
+                <View style={styles.row}>
+                    <Text style={styles.btn} onPress={this.save.bind(this)}>保存</Text>
+                    <Text style={styles.btn} onPress={this.clear.bind(this)}>清除</Text>
                 </View>
             </View>
-        )
+        );
     }
 
+    //保存数据
+    save() {
+        //设置多项
+        var keyValuePairs = [['name', this.state.name], ['phone', this.state.phone]]
+        AsyncStorage.multiSet(keyValuePairs, function(errs){
+            if(errs){
+                //TODO：存储出错
+                return;
+            }
+            alert('数据保存成功!');
+        });
+    }
+
+    //清除数据
+    clear() {
+        var _that = this;
+        AsyncStorage.clear(function(err){
+            if(!err){
+                _that.setState({
+                    name: "",
+                    phone: ""
+                });
+                alert('存储的数据已清除完毕!');
+            }
+        });
+    }
 }
 
-const styles = StyleSheet.create({
-
-    row: {
-        flexDirection: 'row',
-        paddingTop:20
-    },
-    marTop18:{
-        marginTop:18,
-    },
-    marTop14:{
-        marginTop:14,
-    },
-    font14:{
-        fontSize:14,
-    },
-    font10:{
-        fontSize:12,
-    },
-    height160: {
-        height: 160,
-    },
-    yue:{
-        height:80,
-    },
-    green:{
-        color:'#55A44B',
-        fontWeight: '900'
-    },
-    red:{
-        color: '#FF3F0D',
-        fontWeight: '900'
-    },
-    marLeft10:{
-        marginLeft:10,
-    },
-    part_1_left: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: 'red'
-    },
-    part_1_right: {
-        flex: 2,
-        borderWidth: 1,
-        borderColor: 'red'
-    },
-    hanbao:{
-        height:55,
-        width:55
+//默认应用的容器组件
+class ReactNative_View extends Component {
+    render() {
+        return (
+            <View style={[styles.flex, styles.topStatus]}>
+                <UserInfo/>
+            </View>
+        );
     }
+}
+
+//样式定义
+const styles = StyleSheet.create({
+    flex:{
+        flex: 1,
+    },
+    topStatus:{
+        marginTop:25,
+    },
+    row:{
+        flexDirection:'row',
+        height:45,
+        marginBottom:10
+    },
+    head:{
+        width:70,
+        marginLeft:5,
+        backgroundColor:'#23BEFF',
+        height:45,
+        justifyContent:'center',
+        alignItems: 'center'
+    },
+    label:{
+        color:'#fff',
+        fontSize:15,
+        fontWeight:'bold'
+    },
+    input:{
+        height:45,
+        borderWidth:1,
+        marginRight: 5,
+        paddingLeft: 10,
+        borderColor: '#ccc'
+    },
+    btn:{
+        flex:1,
+        backgroundColor:'#FF7200',
+        height:45,
+        textAlign:'center',
+        color:'#fff',
+        marginLeft:5,
+        marginRight:5,
+        lineHeight:45,
+        fontSize:15,
+    },
 });
+
 
 
 // 注册应用(registerComponent)后才能正确渲染
