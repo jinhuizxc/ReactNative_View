@@ -4,94 +4,54 @@
  * @flow
  */
 
-/**
- * Button
- * 做一个按钮
- *
- * 小技巧：TouchableOpacity按住tab键自动展开！
- * 按钮自定义
- * CTRL+D 自动复制一行
- *
- * 模拟网络请求：有2种方法：
- * 1、refs引用按钮方法
- *  <Button  ref = "button" text = "提交"  onPress = {this.fetchData}/>
- *   fetchData = () => {
-        // 禁用按钮
-        this.refs.button.disable();
-        // alert('正在获取数据');// 这里是dialog效果不好，采用定时器可以的！
-        this.timer = setTimeout(() =>{
-            // 获取完数据后启用按钮
-            this.refs.button.enable();
-        }, 3000);
-
-    };
- *  2、
- */
-
 import React, {Component} from 'react';
 import {
     AppRegistry,
     StyleSheet,
     Text,
     View,
+    Button,
+    Alert,
 } from 'react-native';
-import Button from './src/component/Button'
+/**
+ * 属性
+ * accessibilityLabel string
+ * 用于给残障人士显示的文本（比如读屏器软件可能会读取这一内容）
+ * color color
+ * 文本的颜色(iOS)，或是按钮的背景色(Android)
+ * disabled bool
+ * 设置为true时此按钮将不可点击
+ * onPress function
+ * 用户点击此按钮时所调用的处理函数
+ * title string
+ * 按钮内显示的文本
+ */
 
 export default class ReactNative_View extends Component {
+    constructor(props) {
+        super(props);
 
-
-
-    fetchData = () => {
-        // 禁用按钮
-        this.refs.button.disable();
-        // alert('正在获取数据');// 这里是dialog效果不好，采用定时器可以的！
-        this.timer = setTimeout(() =>{
-            // 获取完数据后启用按钮
-            this.refs.button.enable();
-        }, 3000);
-
-    };
-    componentWillUnmount() {
-        // 请注意Un"m"ount的m是小写
-
-        // 如果存在this.timer，则使用clearTimeout清空。
-        // 如果你使用多个timer，那么用多个变量，或者用个数组来保存引用，然后逐个clear
-        this.timer && clearTimeout(this.timer);
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.welcome}>
-                    Welcome to React Native!
-                </Text>
-                <Text style={styles.instructions}>
-                    To get started, edit index.ios.js
-                </Text>
-                <Text style={styles.instructions}>
-                    Press Cmd+R to reload,{'\n'}
-                    Cmd+D or shake for dev menu
-                </Text>
-                {/* props属性  ref相当于html里面的id 标记引用组件等 同时可以添加别的标签   dianji = {this.fetchData()}*/}
-               <Button  ref = "button" text = "提交"  onPress = {this.fetchData}/>
+                <Button
+                    onPress={this.onPressLearnMore}
+                    title="Learn More"
+                    color="#841584"
+                    accessibilityLabel="Learn more about this purple button"
+                />
             </View>
         );
+    }
+
+    onPressLearnMore() {
+
     }
 }
 
 const styles = StyleSheet.create({
-    button: {
-        height: 40,
-        width: 100,
-        borderRadius: 20,
-        backgroundColor: 'green',
-        justifyContent: 'center',
-        overflow: 'hidden',
-    },
-    buttonText: {
-        textAlign: 'center',
-        color: 'white',
-    },
     container: {
         flex: 1,
         justifyContent: 'center',
