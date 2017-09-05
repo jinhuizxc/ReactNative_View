@@ -14,17 +14,27 @@ import {
     Alert,
 } from 'react-native';
 /**
- * 属性
- * accessibilityLabel string
- * 用于给残障人士显示的文本（比如读屏器软件可能会读取这一内容）
- * color color
- * 文本的颜色(iOS)，或是按钮的背景色(Android)
- * disabled bool
- * 设置为true时此按钮将不可点击
- * onPress function
- * 用户点击此按钮时所调用的处理函数
- * title string
- * 按钮内显示的文本
+ * DatePickerIOS
+ * 使用DatePickerIOS来在iOS平台上渲染一个日期/时间选择器。
+ * 这是一个受约束的(Controlled)组件，所以你必须监听onDateChange回调函数并且及时更新date属性来使得组件更新，
+ * 否则用户的修改会立刻被撤销来确保当前显示值和props.date一致。
+ * 属性:
+ * date Date
+ * 当前被选中的日期。
+ * maximumDate Date
+ * 可选的最大日期。限制可选的日期/时间范围。
+ * minimumDate Date
+ * 可选的最小日期。限制可选的日期/时间范围。
+ * minuteInterval enum(1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30)
+ * 可选的最小的分钟单位。
+ * mode enum('date', 'time', 'datetime')
+ * 选择器模式
+ * onDateChange function
+ * 当用户修改日期或时间时调用此回调函数。
+ * 唯一的参数是一个日期对象，表示新的日期和时间。
+ * timeZoneOffsetInMinutes number
+ * 时区差，单位是分钟。
+ * 默认情况下，选择器会选择设备的默认时区。通过此参数，可以指定一个时区。举个例子，要使用北京时间（东八区），可以传递8 * 60。
  */
 
 export default class ReactNative_View extends Component {
